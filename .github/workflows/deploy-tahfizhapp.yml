@@ -1,4 +1,4 @@
-﻿name: Deploy to FTP - Tahfizhapp Subdomain
+﻿name: Deploy Tahfizhapp via SFTP
 
 on:
   push:
@@ -18,25 +18,16 @@ jobs:
         php-version: '8.2'
         extensions: mbstring, xml, ctype, iconv, intl, pdo, mysql, zip, curl
     
-    - name: Check PHP Version
-      run: php -v
-    
     - name: Install Composer dependencies
       run: composer install --no-dev --optimize-autoloader --no-interaction
     
-    - name: Deploy to FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER_SUB }}
-        username: ${{ secrets.FTP_USERNAME_SUB }}
-        password: ${{ secrets.FTP_PASSWORD_SUB }}
-        server-dir: /
-        local-dir: ./
-        exclude: |
-          .git*
-          .github/**
-          node_modules/**
-          tests/
-          .env.*
-          .env
-          .gitignore
+    - name: Install SSH client
+      run: sudo apt-get install -y sshpass
+    
+    - name: Deploy via SFTP
+      run: |
+        sshpass -p "${{ secrets.FTP_PASSWORD_SUB }}" sftp -o StrictHostKeyChecking=no -o ConnectTimeout=30 ${{ secrets.FTP_USERNAME_SUB }}@${{ secrets.FTP_SERVER_SUB }} <<EOF
+        cd /
+        put -r *
+        exit
+        EOF
