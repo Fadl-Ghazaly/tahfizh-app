@@ -1,0 +1,26 @@
+﻿name: Deploy to FTP - Tahfizhapp Subdomain
+
+on:
+  push:
+    branches: [ tahfizhapp ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Deploy Tahfizhapp to FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      with:
+        server: ${{ secrets.FTP_SERVER_TAHFIZHAPP }}
+        username: ${{ secrets.FTP_USERNAME_TAHFIZHAPP }}
+        password: ${{ secrets.FTP_PASSWORD_TAHFIZHAPP }}
+        server-dir: /
+        local-dir: ./
+        exclude: |
+          .git*
+          .github/**
+          node_modules/**
+          .env
