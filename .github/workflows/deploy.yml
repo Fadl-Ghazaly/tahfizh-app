@@ -1,4 +1,4 @@
-﻿name: Deploy Main Domain to FTP
+﻿name: Deploy Main Domain with LFTP
 
 on:
   push:
@@ -21,21 +21,17 @@ jobs:
     - name: Install Composer dependencies
       run: composer install --no-dev --optimize-autoloader --no-interaction
     
-    - name: Deploy to FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        protocol: ftps
-        port: 21
-        server-dir: /
-        local-dir: ./
-        passive: true
-        exclude: |
-          .git*
-          .github/**
-          node_modules/**
-          .env.*
-          .env
-          .gitignore
+    - name: Install lftp
+      run: sudo apt-get update && sudo apt-get install -y lftp
+    
+    - name: Deploy with lftp
+      run: |
+        lftp -c "
+        set ftp:ssl-allow true
+        set ftp:ssl-force true
+        set ftp:ssl-protect-data true
+        set net:timeout 60
+        set net:max-retries 5
+        open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} -p 21 ${{ secrets.FTP_SERVER }}
+        mirror -R -v -e --parallel=2 --exclude .git --exclude .github --exclude node_modules --exclude .env --exclude tests ./ /
+        "
