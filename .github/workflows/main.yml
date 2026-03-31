@@ -23,16 +23,17 @@ jobs:
     - name: Install Composer dependencies
       run: composer install --no-dev --optimize-autoloader --no-interaction
     
-    - name: Sync files
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.5
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        server-dir: /
-        exclude: |
-          **/.git*
-          **/.git/**/
-          **/node_modules/**
-          **/.diagram.json
-          **/.env
+    - name: Install lftp
+      run: sudo apt-get update && sudo apt-get install -y lftp
+    
+    - name: Deploy with lftp
+      run: |
+        lftp -c "
+        set ftp:ssl-allow false
+        set ftp:passive-mode true
+        set net:timeout 60
+        set net:max-retries 10
+        set net:reconnect-interval-base 5
+        open -u ${{ secrets.FTP_USERNAME }},${{ secrets.FTP_PASSWORD }} ${{ secrets.FTP_SERVER }}
+        mirror -R -v -e --parallel=1 --exclude .git --exclude .github --exclude node_modules --exclude tests --exclude .env . /
+        "
