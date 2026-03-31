@@ -27,7 +27,7 @@ jobs:
         server: ${{ secrets.FTP_SERVER_SUB }}
         username: ${{ secrets.FTP_USERNAME_SUB }}
         password: ${{ secrets.FTP_PASSWORD_SUB }}
-        server-dir: /tahfizhapp/
+        server-dir: /              # ← Ubah ke / karena root sudah di folder subdomain
         local-dir: ./
         passive: true
         exclude: |
