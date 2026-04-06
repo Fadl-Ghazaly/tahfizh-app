@@ -201,7 +201,7 @@
     <section class="hero">
         <div class="hero-badge">
             <span>✨</span>
-            <span>Sistem Manajemen Aplikasi Tahfizh</span>
+            <span>Sistem Manajemen Tahfizh</span>
         </div>
         <h1>Pantau Progress Hafalan<br>Al-Qur'an Santri Anda</h1>
         <p>Platform digital modern untuk Pesantren memantau, mengelola, dan menganalisis progres hafalan seluruh santri secara real-time dan akurat.</p>
