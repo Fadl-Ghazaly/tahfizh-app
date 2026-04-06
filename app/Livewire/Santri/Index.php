@@ -86,7 +86,7 @@ class Index extends Component
     {
         $this->validate();
 
-        $santri = Santri::updateOrCreate(['id' => $this->santri_id], [
+        $santri = Santri::updateOrCreate(['id' => $this->santri_id ?: null], [
             'nama_lengkap' => $this->nama_lengkap,
             'jenis_kelamin' => $this->jenis_kelamin,
             'kelas' => $this->kelas,

@@ -67,7 +67,7 @@ class Index extends Component
     {
         $this->validate();
 
-        Ustadz::updateOrCreate(['id' => $this->ustadz_id], [
+        Ustadz::updateOrCreate(['id' => $this->ustadz_id ?: null], [
             'nama_lengkap' => $this->nama_lengkap,
             'jenis_kelamin' => $this->jenis_kelamin,
             'no_wa' => $this->no_wa,

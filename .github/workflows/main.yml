@@ -1,4 +1,4 @@
-﻿name: Deploy
+name: Deploy
 
 on:
   push:
@@ -21,6 +21,9 @@ jobs:
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
         server-dir: /
+        timeout: 300000 # Menambah waktu timeout koneksi
+        security: loose # Opsi keamanan lebih longgar untuk server tertentu
+        log-level: verbose
         exclude: |
           .git*
           .github/**
