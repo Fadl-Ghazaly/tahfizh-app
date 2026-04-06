@@ -16,24 +16,28 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         // 1 Admin
-        User::create([
-            'name' => 'Administrator',
-            'email' => 'admin@tahfizh.com',
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-        ]);
+        User::updateOrCreate(
+            ['email' => 'admin@tahfizh.com'],
+            [
+                'name' => 'Administrator',
+                'password' => Hash::make('password'),
+                'role' => 'admin',
+            ]
+        );
 
         // 5 Ustadz Users
         $ustadzs = Ustadz::all();
         foreach ($ustadzs as $ustadz) {
             $emailName = strtolower(explode(' ', $ustadz->nama_lengkap)[0]);
-            User::create([
-                'name' => 'Ustadz ' . $ustadz->nama_lengkap,
-                'email' => $emailName . '@tahfizh.com',
-                'password' => Hash::make('password'),
-                'role' => 'user',
-                'ustadz_id' => $ustadz->id,
-            ]);
+            User::updateOrCreate(
+                ['email' => $emailName . '@tahfizh.com'],
+                [
+                    'name' => 'Ustadz ' . $ustadz->nama_lengkap,
+                    'password' => Hash::make('password'),
+                    'role' => 'user',
+                    'ustadz_id' => $ustadz->id,
+                ]
+            );
         }
     }
 }
